@@ -3,7 +3,7 @@ Contributors: 010Pixel
 Tags: metabox, template, custom post types, post template, plugin, 010pixel
 Requires at least: 3.1
 Tested up to: 3.9.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GNU General Public License, version 3 (GPL-3.0)
 
 Template list metabox is to create Metabox for Dropdown List of all available Templates to attach with any Custom Post Types
