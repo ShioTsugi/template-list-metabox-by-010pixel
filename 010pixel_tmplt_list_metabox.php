@@ -4,7 +4,7 @@
  * Plugin URI: http://www.010pixel.com/plugins/010pixel-template-list-metabox/
  * Description: This plugin is to create Template Dropdown List Metabox for Custom Post Types.
  * Author: 010 Pixel
- * Version: 1.0
+ * Version: 1.1
  * Author URI: http://www.010pixel.com/
  */
 
