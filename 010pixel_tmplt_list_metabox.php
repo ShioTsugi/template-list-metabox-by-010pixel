@@ -1,19 +1,11 @@
 <?php
 /*
- * Plugin Name: Template List Metabox by 010Pixel
- * Plugin URI: http://www.010pixel.com/wp-plugins/template-list-metabox/
+ * Plugin Name: 010Pixel Template List Metabox
+ * Plugin URI: http://www.010pixel.com/plugins/010pixel-template-list-metabox/
  * Description: This plugin is to create Template Dropdown List Metabox for Custom Post Types.
- * Version: 1.0
  * Author: 010 Pixel
+ * Version: 1.0
  * Author URI: http://www.010pixel.com/
- * License: GPLv3
- */
-
-/**
- * @author 010 Pixel
- * @copyright 010 Pixel, 2014, All Rights Reserved
- * This code is released under the GPL licence version 3 or later, available here
- * http://www.gnu.org/licenses/gpl.txt
  */
 
 	/**
@@ -26,6 +18,12 @@
 	 *
 	 * The Plugin will check which page user is accessing and load the class accordingly
 	 *
+	 */
+
+	/*
+	 *	V 1.1
+	 *	- Removed bug of settings link not displaying in plugin list
+	 *	- Added setting page to Settings menu instead of Plugins menu
 	 */
 ?>
 <?php
@@ -78,7 +76,8 @@
 			add_action('save_post',array( &$this, 'save_post_template' ),10,2);
 			
 			// Add link in plugins list
-			add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( &$this,'addSettingsLink' ) );
+			$prefix = is_network_admin() ? 'network_admin_' : '';
+			add_filter( $prefix . 'plugin_action_links_' . plugin_basename(__FILE__), array( &$this,'addSettingsLink' ), 10, 2 );
 		}
 		
 		// Add Meta Box to Current Post Type
@@ -102,7 +101,7 @@
 				$templateList .= '<input type="hidden" name="custom_type_noncename" id="custom_type_noncename" value="' . wp_create_nonce( $post->post_type . $post->ID ) . '" />';
 				$templateList .= '<label class="screen-reader-text" for="post_template">' . translate($this->metaBoxTitle) . '</label>';
 				$templateList .= '<select name="post_template" id="post_template">';
-				$templateList .= '<option value="">' . translate("Default Template") . '</option>';
+				$templateList .= '<option value="default">' . translate("Default Template") . '</option>';
 
 				// Calling a Wordpress in-built function to get templates array
 				$templates = get_page_templates();
@@ -139,16 +138,16 @@
 			if ( in_array($post->post_type, $this->PostTypesWithTemplateAllwed) && !empty($_POST['post_template']) )
 			{
 				update_post_meta($post->ID,$post->post_type . '_template',$_POST['post_template']);
-			} elseif ( empty($_POST['post_template']) ) {
-				delete_post_meta($post->ID,$post->post_type . '_template',$_POST['post_template']);
 			}
 			
 		}
 		
 		// Add a link to the setting option page
 		public static function addSettingsLink( $links ) {
-		   $links[] = '<a href="'.admin_url('plugins.php?page=010pixel_tmplt_list_metabox').'"> '.__( 'Settings', 'sis' ).' </a>';
-		   return $links;
+		
+			$links[] = '<a href="'.admin_url('plugins.php?page=010pixel_tmplt_list_metabox').'"> '.__( 'Settings', 'sis' ).' </a>';
+			
+			return $links;
 		}
 	}
 
@@ -174,7 +173,7 @@
 		// Create Menu to access Template List Metabox Admin Page
 		public function add_tmplt_mngr_page() {  
 		  
-			add_plugins_page(  
+			add_options_page(  
 				'Template List Metabox',
 				'Template List Metabox',
 				'administrator',
@@ -189,7 +188,7 @@
 			?> 
 			<div class="wrap"> 
 			 
-				<?php get_screen_icon(); ?>
+				<?php screen_icon(); ?>
 				<h2>Template Allowed Post Types List</h2> 
 				<?php settings_errors(); ?> 
 				 
@@ -254,18 +253,16 @@
 			
 			$html = '';
 			
-			// Remove pages and attachments
-			unset($post_types['page']);
-			unset($post_types['attachment']);
-			
 			foreach ($post_types  as $post_type ) {
-				$html .= '<input 
-							type="checkbox" 
-							id="template_post_type_list['. $post_type->name .']"
-							name="template_post_type_list['. $post_type->name .']" 
-							value="'. $post_type->name .'" ' . checked($post_type->name, isset($options[$post_type->name]) ? $options[$post_type->name]: '' , false) . '
-						/>&nbsp;';   
-				$html .= '<label for="template_post_type_list['. $post_type->name .']">' . $post_type->label .'</label><br />';
+				if ( $post_type->name != 'attachment' ) {
+					$html .= '<input 
+								type="checkbox" 
+								id="template_post_type_list['. $post_type->name .']"
+								name="template_post_type_list['. $post_type->name .']" 
+								value="'. $post_type->name .'" ' . checked($post_type->name, isset($options[$post_type->name]) ? $options[$post_type->name]: '' , false) . '
+							/>&nbsp;';   
+					$html .= '<label for="template_post_type_list['. $post_type->name .']">' . $post_type->label .'</label><br />';
+				}
 			}
 			 
 			echo $html; 
@@ -293,32 +290,27 @@
 		// Load Custom Template
 		public function load_custom_template() {
 			
-			// Get Object for current post
-			$object = get_queried_object();
-			
-			// Set default template files
-			$defaultTemplateFile = array();
-			$defaultTemplateFile[] = "single-{$object->post_type}-{$object->post_name}.php";
-			$defaultTemplateFile[] = "single-{$object->post_type}.php";
-			$defaultTemplateFile[] = "single.php";
-
 			// Get All post types for which templates are allowed
-			$PostTypesWithTemplateAllwed = (array) get_option('template_post_type_list'); 
+			$PostTypesWithTemplateAllwed = get_option('template_post_type_list'); 
+			
+			// Get Current Post ID
+			$postId = get_the_ID();
+			
+			// Get Current Post Type
+			$postType = get_post_type( $postId );
 			
 			// If Current Post Type is in the Post Type with Template allowed list
 			// then show the post in the chosen template			
-			if ( in_array ( $object->post_type, $PostTypesWithTemplateAllwed) ) {
+			if ( in_array ( $postType, $PostTypesWithTemplateAllwed) ) {
 				
-				$templateFile = get_post_meta($object->ID, $object->post_type . '_template', true);
+				$templateFile = get_post_meta($postId, $postType . '_template', true);
 				
-				if ( !empty($templateFile) ) {
-					$defaultTemplateFile = $templateFile;
-				}				
+				$template = locate_template( $templateFile, false );
+				
+				return $template;
 			}
 			
-			// Get template file
-			$template = locate_template( $defaultTemplateFile, false );
-			return $template;
+			return false;
 		}
 	}
 ?>
