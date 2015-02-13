@@ -66,4 +66,4 @@ For any query, you can contact me at [010 Pixel](http://www.010pixel.com/)
 * Initial release.
 = v1.1.0 =
 * Removed bug of settings link not displaying in plugin list
-* Added setting page to Settings menu instead of Plugins menu
+* Added setting page under Settings menu instead of Plugins menu
