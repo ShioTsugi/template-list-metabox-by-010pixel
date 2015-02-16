@@ -146,7 +146,7 @@
 		// Add a link to the setting option page
 		public static function addSettingsLink( $links ) {
 		
-			$links[] = '<a href="'.admin_url('plugins.php?page=010pixel_tmplt_list_metabox').'"> '.__( 'Settings', 'sis' ).' </a>';
+			$links[] = '<a href="'.admin_url('options-general.php?page=010pixel_tmplt_list_metabox').'"> '.__( 'Settings', 'sis' ).' </a>';
 			
 			return $links;
 		}
