@@ -25,6 +25,10 @@
 	 *	Date: 2015-02-13
 	 *	- Removed bug of settings link not displaying in plugin list
 	 *	- Added setting page to Settings menu instead of Plugins menu
+	 *
+	 *	V 1.1.1
+	 *	Date: 2015-02-16
+	 *	- Removed bug of settings link showing error page
 	 */
 ?>
 <?php
