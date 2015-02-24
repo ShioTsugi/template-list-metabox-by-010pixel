@@ -2,7 +2,7 @@
 Contributors: 010Pixel
 Tags: metabox, template, custom post types, post template, plugin, 010pixel
 Requires at least: 3.1
-Tested up to: 3.9.1
+Tested up to: 4.1.1
 Stable tag: 1.1.1
 License: GNU General Public License, version 3 (GPL-3.0)
 
