@@ -1,11 +1,11 @@
 === Template List Metabox ===
 Contributors: 010Pixel
+Donate link: https://pledgie.com/campaigns/28621
 Tags: metabox, template, custom post types, post template, plugin, 010pixel
 Requires at least: 3.1
 Tested up to: 4.1.1
 Stable tag: 1.1.1
 License: GNU General Public License, version 3 (GPL-3.0)
-Donate link: https://pledgie.com/campaigns/28621
 
 Template list metabox is to create Metabox for Dropdown List of all available Templates to attach with any Custom Post Types
 
