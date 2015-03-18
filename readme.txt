@@ -1,6 +1,6 @@
 === Template List Metabox ===
 Contributors: 010pixel
-Donate link: https://pledgie.com/campaigns/28621
+Donate link: https://pledgie.com/campaigns/28626
 Tags: metabox, template, custom post types, post template, plugin, 010pixel
 Requires at least: 3.1
 Tested up to: 4.1.1
