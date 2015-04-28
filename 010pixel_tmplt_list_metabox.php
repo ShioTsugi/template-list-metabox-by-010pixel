@@ -309,8 +309,19 @@
 			if ( in_array ( $postType, $PostTypesWithTemplateAllwed) ) {
 				
 				$templateFile = get_post_meta($postId, $postType . '_template', true);
-				
-				$template = locate_template( $templateFile, false );
+
+				if ( "default" == $templateFile ) {
+
+					$templates[] = "single-{$postType}.php";
+					$templates[] = "single.php";
+
+					$template = locate_template( $templates, false );
+
+				} else {
+
+					$template = locate_template( $templateFile, false );
+
+				}
 				
 				return $template;
 			}
