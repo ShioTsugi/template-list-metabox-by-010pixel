@@ -310,7 +310,7 @@
 				
 				$templateFile = get_post_meta($postId, $postType . '_template', true);
 
-				if ( "default" == $templateFile ) {
+				if ( "" == $templateFile || "default" == $templateFile ) {
 
 					$templates[] = "single-{$postType}.php";
 					$templates[] = "single.php";
